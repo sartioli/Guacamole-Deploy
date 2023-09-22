@@ -42,6 +42,7 @@ verify_input() {
 
     echo "  SAML_ENTITY_ID: $1"
     echo "  SAML_IDP_METADATA_URL: $2"
+    echo "  Guacamole IdP Admin: $3"
     
     read -p "Is this correct? (y/n): " choice
 
@@ -83,7 +84,7 @@ while true; do
     echo -n "Enter SAML Metadata URL: "
     read SAML_IDP_METADATA_URL
 
-    if verify_input "$SAML_ENTITY_ID" "$SAML_IDP_METADATA_URL"; then
+    if verify_input "$SAML_ENTITY_ID" "$SAML_IDP_METADATA_URL" "$GUACADMIN"; then
         break
     fi
 done
