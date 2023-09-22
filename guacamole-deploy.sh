@@ -164,7 +164,7 @@ echo -e "\n- Guacd docker container running"
 echo -e "\n- Downloading the Guacd Docker Image, retrieving the MySQL initialization database and configure it"
 
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > ./01-initdb.sql
-fin
+fi
 
 echo -e "\n- Launching MySQL Container"
 
