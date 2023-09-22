@@ -180,7 +180,6 @@ sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_STRICT="false"' ./start.sh
 sed -i 's/WEBAPP_CONTEXT:-guacamole/WEBAPP_CONTEXT:-ROOT/' ./start.sh
 docker cp ./start.sh guacamole-client:/opt/guacamole/bin/start.sh
 docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole.war
-docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole
 
 echo -e "\n- Restaring Guacamole container"
 docker restart guacamole-client
@@ -188,9 +187,13 @@ echo -e "\n- Guacamole container restarted"
 
 bash -c 'echo -n "Waiting for Guacamole on port 8080 .."; for _ in `seq 1 120`; do echo -n .; sleep 1; nc -z localhost 8080 && echo " Open." && exit ; done; echo " Timeout!" >&2; exit 1'
 
-docker update --restart unless-stopped guacamoledb
-docker update --restart unless-stopped guacamole-server
-docker update --restart unless-stopped guacamole-client
+# Deleting the old guacamole webapp folder
+docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole
+
+# Making the guacamole containers auto-restarting
+docker update --restart unless-stopped guacamoledb > /dev/null
+docker update --restart unless-stopped guacamole-server > /dev/null
+docker update --restart unless-stopped guacamole-client > /dev/null
 
 echo -e "\n- Installation of Guacamole Completed !"
 
@@ -233,7 +236,6 @@ docker cp guacamole-client:/opt/guacamole/bin/start.sh .
 sed -i 's/WEBAPP_CONTEXT:-guacamole/WEBAPP_CONTEXT:-ROOT/' ./start.sh
 docker cp ./start.sh guacamole-client:/opt/guacamole/bin/start.sh
 docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole.war
-docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole
 
 echo -e "\n- Restaring Guacamole container"
 docker restart guacamole-client
@@ -241,9 +243,13 @@ echo -e "\n- Guacamole container restarted"
 
 bash -c 'echo -n "Waiting for Guacamole on port 8080 .."; for _ in `seq 1 120`; do echo -n .; sleep 1; nc -z localhost 8080 && echo " Open." && exit ; done; echo " Timeout!" >&2; exit 1'
 
-docker update --restart unless-stopped guacamoledb
-docker update --restart unless-stopped guacamole-server
-docker update --restart unless-stopped guacamole-client
+# Deleting the old guacamole webapp folder
+docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole
+
+# Making the guacamole containers auto-restarting
+docker update --restart unless-stopped guacamoledb > /dev/null
+docker update --restart unless-stopped guacamole-server > /dev/null
+docker update --restart unless-stopped guacamole-client > /dev/null
 
 echo -e "\n- Installation of Guacamole Completed !"
 fi
