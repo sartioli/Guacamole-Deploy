@@ -63,7 +63,8 @@ read SAML
 if [ "$SAML" = "y" ] ;
 then
 
-echo -e "\n- Setting up Guacamole -"
+echo -e "\n- Deploying Gyacamole without IdP Integration !"
+echo -e "\n- Setting up SAML initial Administrator User -"
 # Capture administrative account to setup guacamole
 while true; do
     echo -n "Enter admin account [admin@example.onmicrosoft.com]: "
@@ -152,7 +153,34 @@ JOIN guacamole_user            ON guacamole_user.entity_id = affected.entity_id;
 
 EOF
 
+echo -e "\n- Launching MySQL Container"
+
+docker run --name guacamoledb -e MYSQL_ROOT_PASSWORD='Gh.4@GMks8R.' -e MYSQL_USER=guacadmin -e MYSQL_PASSWORD='w9xHA@+V#!3M' -e MYSQL_DATABASE=guacdb -d --network host mysql/mysql-server
+
+bash -c 'echo -n "Waiting for MySQL on port 3306 .."; for _ in `seq 1 120`; do echo -n .; sleep 1; nc -z localhost 3306 && echo " Open." && exit ; done; echo " Timeout!" >&2; exit 1'
+
+echo -e "\n- MySQL launched"
+
+echo -e "\n- Initialising MySQL Database for Guacamole"
+
+docker exec -i guacamoledb sh -c 'exec mysql -u root -p"Gh.4@GMks8R." guacdb' < ./01-initdb.sql
+
+echo -e "\n- Launching Guacamole Docker Container"
+
+docker run --name guacamole-client -e GUACD_HOSTNAME=127.0.0.1 -e GUACD_PORT=4822 -e MYSQL_HOSTNAME=127.0.0.1  -e MYSQL_DATABASE=guacdb -e MYSQL_USER=guacadmin -e MYSQL_PASSWORD='w9xHA@+V#!3M' -d --network host guacamole/guacamole
+
+bash -c 'echo -n "Waiting for Guacamole on port 8080 .."; for _ in `seq 1 120`; do echo -n .; sleep 1; nc -z localhost 8080 && echo " Open." && exit ; done; echo " Timeout!" >&2; exit 1'
+
+echo -e "\n- Guacamole Container launched"
+
+echo -e "\n- Chaniging default Guacamole path to root"
+
+docker exec guacamole-client mv /home/guacamole/tomcat/webapps/guacamole.war /home/guacamole/tomcat/webapps/ROOT.war
+
+echo -e "\n- Installation of Guacamole Completed !"
+
 else
+echo -e "\n- Deploying Gyacamole without IdP Integration !"
 echo -e "\n- Downloading the Guacd Docker Image and creating the Guacd Docker Container"
 
 docker run --name guacamole-server -d --network host guacamole/guacd
@@ -164,7 +192,6 @@ echo -e "\n- Guacd docker container running"
 echo -e "\n- Downloading the Guacd Docker Image, retrieving the MySQL initialization database and configure it"
 
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > ./01-initdb.sql
-fi
 
 echo -e "\n- Launching MySQL Container"
 
@@ -191,3 +218,4 @@ echo -e "\n- Chaniging default Guacamole path to root"
 docker exec guacamole-client mv /home/guacamole/tomcat/webapps/guacamole.war /home/guacamole/tomcat/webapps/ROOT.war
 
 echo -e "\n- Installation of Guacamole Completed !"
+fi
