@@ -179,7 +179,8 @@ sed -ie '/^GUACAMOLE_PROPERTIES/a EXTENSION_PRIORITY="saml"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_STRICT="false"' ./start.sh
 sed -i 's/WEBAPP_CONTEXT:-guacamole/WEBAPP_CONTEXT:-ROOT/' ./start.sh
 docker cp ./start.sh guacamole-client:/opt/guacamole/bin/start.sh
-docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole*
+docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole.war
+docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole
 
 echo -e "\n- Restaring Guacamole container"
 docker restart guacamole-client
@@ -231,7 +232,8 @@ echo -e "\n- Configuring Guacamole container"
 docker cp guacamole-client:/opt/guacamole/bin/start.sh .
 sed -i 's/WEBAPP_CONTEXT:-guacamole/WEBAPP_CONTEXT:-ROOT/' ./start.sh
 docker cp ./start.sh guacamole-client:/opt/guacamole/bin/start.sh
-docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole*
+docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole.war
+docker exec guacamole-client rm -rf /home/guacamole/tomcat/webapps/guacamole
 
 echo -e "\n- Restaring Guacamole container"
 docker restart guacamole-client
