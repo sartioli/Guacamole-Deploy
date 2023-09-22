@@ -114,7 +114,7 @@ echo -e "\n- Downloading the Guacd Docker Image, retrieving the MySQL initializa
 docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > ./01-initdb.sql
 
 # Add guacamole admin account creation script to ./init/initdb.sql
-    cat <<EOF >> "./01-initdb.sql"
+    cat << EOF >> "./01-initdb.sql"
 
 -- Create IdP user with administrative privileges
 INSERT INTO guacamole_entity (name, type) VALUES ('$GUACADMIN', 'USER');
@@ -176,6 +176,13 @@ echo -e "\n- Guacamole Container launched"
 echo -e "\n- Chaniging default Guacamole path to root"
 
 docker exec guacamole-client mv /home/guacamole/tomcat/webapps/guacamole.war /home/guacamole/tomcat/webapps/ROOT.war
+
+docker cp guacamole-client:/opt/guacamole/bin/start.sh .
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_IDP_METADATA_URL="$SAML_IDP_METADATA_URL"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_ENTITY_ID="$SAML_ENTITY_ID"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_CALLBACK_URL="$SAML_ENTITY_ID"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a EXTENSION_PRIORITY="saml"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_STRICT="false"' ./start.sh
 
 echo -e "\n- Installation of Guacamole Completed !"
 
