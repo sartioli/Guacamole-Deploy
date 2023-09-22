@@ -57,7 +57,7 @@ verify_input() {
 }
 
 
-echo -n "Do you want to integrate Gyacamole with an IdP for SAML Authentication ? [y/N]: "
+echo -n "Do you want to integrate Guacamole with an IdP for SAML Authentication ? [y/N]: "
 read SAML
 
 if [ "$SAML" = "y" ] ;
