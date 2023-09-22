@@ -41,7 +41,6 @@ verify_input() {
     echo -e "\nYou entered the following:"
 
     echo "  SAML_ENTITY_ID: $1"
-    echo "  SAML_IDP_URL: $2"
     echo "  SAML_IDP_METADATA_URL: $3"
     
     read -p "Is this correct? (y/n): " choice
@@ -81,12 +80,10 @@ echo -e "\n- Configure SAML Attributes -"
 while true; do
     echo -n "Enter Netskope App URL [example: https://app-8443-tenant.eu.npaproxy.goskope.com]: "
     read SAML_ENTITY_ID
-    echo -n "Enter SAML IDP Login URL: "
-    read SAML_IDP_URL
     echo -n "Enter SAML Metadata URL: "
     read SAML_IDP_METADATA_URL
 
-    if verify_input "$SAML_ENTITY_ID" "$SAML_IDP_URL" "$SAML_IDP_METADATA_URL"; then
+    if verify_input "$SAML_ENTITY_ID" "$SAML_IDP_METADATA_URL"; then
         break
     fi
 done
