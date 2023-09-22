@@ -176,9 +176,9 @@ docker exec guacamole-client mv /home/guacamole/tomcat/webapps/guacamole.war /ho
 
 echo -e "\n- Configuring Guacamole container for IdP integration"
 docker cp guacamole-client:/opt/guacamole/bin/start.sh .
-sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_IDP_METADATA_URL="$SAML_IDP_METADATA_URL"' ./start.sh
-sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_ENTITY_ID="$SAML_ENTITY_ID"' ./start.sh
-sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_CALLBACK_URL="$SAML_ENTITY_ID"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_IDP_METADATA_URL="'$SAML_IDP_METADATA_URL'"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_ENTITY_ID="'$SAML_ENTITY_ID'"' ./start.sh
+sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_CALLBACK_URL="'$SAML_ENTITY_ID'"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a EXTENSION_PRIORITY="saml"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_STRICT="false"' ./start.sh
 docker cp ./start.sh guacamole-client:/opt/guacamole/bin/start.sh
