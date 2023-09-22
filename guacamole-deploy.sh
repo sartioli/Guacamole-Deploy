@@ -63,7 +63,7 @@ read SAML
 if [ "$SAML" = "y" ] ;
 then
 
-echo -e "\n- Deploying Gyacamole without IdP Integration !"
+echo -e "\n- Deploying Gyacamole with IdP Integration !"
 echo -e "\n- Setting up SAML initial Administrator User -"
 # Capture administrative account to setup guacamole
 while true; do
