@@ -41,7 +41,7 @@ verify_input() {
     echo -e "\nYou entered the following:"
 
     echo "  SAML_ENTITY_ID: $1"
-    echo "  SAML_IDP_METADATA_URL: $3"
+    echo "  SAML_IDP_METADATA_URL: $2"
     
     read -p "Is this correct? (y/n): " choice
 
