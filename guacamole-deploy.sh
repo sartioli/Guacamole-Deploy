@@ -177,12 +177,20 @@ echo -e "\n- Chaniging default Guacamole path to root"
 
 docker exec guacamole-client mv /home/guacamole/tomcat/webapps/guacamole.war /home/guacamole/tomcat/webapps/ROOT.war
 
+echo -e "\n- Configuring Guacamole container for IdP integration"
 docker cp guacamole-client:/opt/guacamole/bin/start.sh .
 sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_IDP_METADATA_URL="$SAML_IDP_METADATA_URL"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_ENTITY_ID="$SAML_ENTITY_ID"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_CALLBACK_URL="$SAML_ENTITY_ID"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a EXTENSION_PRIORITY="saml"' ./start.sh
 sed -ie '/^GUACAMOLE_PROPERTIES/a SAML_STRICT="false"' ./start.sh
+docker cp ./start.sh guacamole-client:/opt/guacamole/bin/start.sh
+
+echo -e "\n- Restaring Guacamole container"
+docker restart guacamole-client
+echo -e "\n- Guacamole container restarted"
+
+bash -c 'echo -n "Waiting for Guacamole on port 8080 .."; for _ in `seq 1 120`; do echo -n .; sleep 1; nc -z localhost 8080 && echo " Open." && exit ; done; echo " Timeout!" >&2; exit 1'
 
 echo -e "\n- Installation of Guacamole Completed !"
 
