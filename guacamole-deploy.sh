@@ -21,6 +21,20 @@ then
 	exit
 fi
 
+## Check if jq is installed, if not, install it
+REQUIRED_PKG="netcat"
+
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+
+echo ""
+echo Checking for $REQUIRED_PKG: $PKG_OK
+echo ""
+
+if [ "" = "$PKG_OK" ]; then
+  echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG."
+  sudo apt-get --yes install $REQUIRED_PKG
+fi
+
 # Function to validate the email address using regex
 validate_email() {
     local email=$1
